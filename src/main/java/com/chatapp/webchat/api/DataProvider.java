@@ -1,6 +1,7 @@
 package com.chatapp.webchat.api;
 
 import com.chatapp.webchat.database.DatabaseRepository;
+import com.chatapp.webchat.database.DatabaseRepositoryAsync;
 import com.chatapp.webchat.entities.Message;
 import com.chatapp.webchat.entities.User;
 import com.chatapp.webchat.entities.UserChatRoom;
@@ -39,6 +40,25 @@ public class DataProvider {
 
             // Create the message in the database
             DatabaseRepository.createMessage(message.getUserId(), message.getChatRoomId(), message.getContent());
+
+            // Return a success response
+            return Response.status(Response.Status.CREATED).entity("Message created successfully").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle other exceptions and return an appropriate response
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @POST
+    @Path("create-message-async")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createMessageAsync(Message message) {
+        try {
+
+            // Create the message in the database
+            DatabaseRepositoryAsync.createMessageAsync(message.getUserId(), message.getChatRoomId(), message.getContent());
 
             // Return a success response
             return Response.status(Response.Status.CREATED).entity("Message created successfully").build();
